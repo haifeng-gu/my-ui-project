@@ -1,0 +1,14 @@
+Step 1: create cluster in GKE
+Step 2: Deploy pods
+    In GKE workloads, click "deploy"
+        - select container image
+        - set environment variables to replaces .env (API_PROXY_TARGET=http://http://104.197.19.10:5000)
+    Check logs:
+        - kubectl logs my-ui-c494d79c6-l829j
+
+step 3: deploy service
+    - From deployments/workloads, select expose service
+    - select port mapping: target port: 8000
+
+Step 4: test the application:
+    - http://34.136.107.91:8000

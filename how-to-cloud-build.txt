@@ -1,0 +1,48 @@
+Step 0: bootstrap setting
+        - copy nodes_modules/bootstrap/dist into public/bootstrap
+        - in index.html change: href="./bootstrap/css/bootstrap.min.css"
+        (the step 0 could be replace by using CDN bootstrap href) - not tested
+
+Step 1: create DockerFile, .dockerignore file, and .gcloudignore
+    Docker file format:
+        FROM node:16.13.1
+        WORKDIR /app
+        COPY package*.json ./
+        RUN npm install
+        COPY . .
+        EXPOSE 8000
+        CMD ["node", "uiserver.js"]
+    .dockerignore file format
+        .git
+        *Dockerfile*
+        *docker-compose*
+        node_modules
+    .gcloudignore (not verified yet)
+        #!include:.gitignore
+        #!include:.dockerignore
+
+Step 2: create GKE project, and enable Container Registery Api
+    
+Step 3: create cloudbuild.yaml
+    Format:
+    steps:
+        - name: 'gcr.io/cloud-builders/docker'
+        args: [ 'build', '-t', 'gcr.io/nimble-charmer-336120/my-ui-project', '.' ]
+        - name: 'gcr.io/cloud-builders/docker'
+        args: [ 'push', 'gcr.io/nimble-charmer-336120/my-ui-project' ]
+
+Step 4: login into the google cloud sdk shell (local PC)
+        cd C:\myCodebase\HaifengTestProject\my-ui-project\
+        set HTTP_PROXY=http://webproxystatic-bc.tsl.telus.com:8080  (or the next 3 commands)
+        gcloud config set proxy/type http
+        gcloud config set proxy/address webproxystatic-bc.tsl.telus.com
+        gcloud config set proxy/port 8080
+        gcloud auth login --no-launch-browser (probably need to use VPN)
+        gcloud config set project nimble-charmer-336120
+
+Step 5: run cloud build
+        gcloud builds submit --config cloudbuild.yaml ./    
+        After the execution, you can find the image in Container Registery
+
+
+

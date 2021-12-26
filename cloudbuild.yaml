@@ -1,0 +1,5 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/nimble-charmer-336120/my-ui-project', '.' ]
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'push', 'gcr.io/nimble-charmer-336120/my-ui-project' ]
